@@ -1,0 +1,1 @@
+Music app to assist in the creation of music without deep knowledge of music theory.
