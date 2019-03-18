@@ -62,13 +62,6 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QCheckBox" name="checkBox">
-      <property name="text">
-       <string>CheckBox</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0">
      <widget class="QPushButton" name="one_chord">
       <property name="text">
@@ -85,14 +78,83 @@
       </property>
       <item>
        <property name="text">
+        <string>Gb</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Db</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Ab</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Eb</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Bb</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>F</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
         <string>C</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>C#</string>
+        <string>G</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>D</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>A</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>E</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>B</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>F#</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="1" column="5">
+     <widget class="QPushButton" name="viewChords">
+      <property name="text">
+       <string>View Chords</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>7th Chords</string>
+      </property>
      </widget>
     </item>
    </layout>
