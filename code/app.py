@@ -1,28 +1,16 @@
-# from PySide2 import QtWidgets
-#
-# from main import Ui_mainWindow
-#
-# class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
-#     def __init__(self):
-#         super(MyQtApp, self).__init__()
-#         self.setupUi(self)
-#
-# if __name__ == '__main__':
-#     app = QtWidgets.QApplication()
-#     qt_app = MyQtApp()
-#     qt_app.show()
-#     app.exec_()
-
 import sys
-from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QWidget, QShortcut
 from PyQt5.uic import loadUi
 from PyQt5 import QtSql, QtGui, QtCore, QtWidgets
-from main import Ui_mainWindow
+from PyQt5.QtCore import Qt
+from main import Ui_MainWindow
 import sqlite3
 import os.path
 from pprint import pprint
 from PyQt5.QtGui import QColor
 from pygame import mixer
+from PyQt5.QtCore import Qt
+from table import Ui_Dialog
 
 
 
@@ -31,12 +19,11 @@ class MusicApp():
     """docstring for ."""
     def __init__(self):
         app = QApplication(sys.argv)
-        # super(MusicApp, self).__init__()
         self.MainWindow = QMainWindow()
-        self.ui = Ui_mainWindow()
+        self.ui = Ui_MainWindow()
+        self.table = Ui_Dialog()
         self.ui.setupUi(self.MainWindow)
-        # loadUi("main.ui", self)
-        # self.setWindowTitle("melody maker")
+        self.ui.comboBox.currentText()
         self.ui.one_chord.clicked.connect(self.play_sound_one)
         self.ui.two_chord.clicked.connect(self.play_sound_two)
         self.ui.three_chord.clicked.connect(self.play_sound_three)
@@ -44,52 +31,323 @@ class MusicApp():
         self.ui.five_chord.clicked.connect(self.play_sound_five)
         self.ui.six_chord.clicked.connect(self.play_sound_six)
         self.ui.seven_chord.clicked.connect(self.play_sound_seven)
-        self.ui.viewChords.clicked.connect(self.print_data)
+        self.ui.viewChords.clicked.connect(self.open_table)
+
         self.model = None
         self.ui.viewChords.clicked.connect(self.sql_tableview_model)
         self.ui.viewChords.clicked.connect(self.sql_add_row)
         self.ui.viewChords.clicked.connect(self.sql_delete_row)
         self.ui.viewChords.clicked.connect(self.create_key_db)
-
         self.MainWindow.show()
         sys.exit(app.exec_())
 
 
+    def open_table(self):
+        self.window = QtWidgets.QDialog()
+        self.ui = Ui_Dialog()
+        self.ui.setupUi(self.window)
+        self.window.show()
 
     def play_sound_one(self):
         mixer.init()
-        mixer.music.load("sounds/Cmaj.ogg")
-        mixer.music.play()
+        combo = self.ui.comboBox.currentText()
+        if combo == "Gb":
+            mixer.music.load("sounds/soundsGb/Gb.ogg")
+            mixer.music.play()
+        elif combo == "Db":
+            mixer.music.load("sounds/soundsDb/Db.ogg")
+            mixer.music.play()
+        elif combo == "Ab":
+            mixer.music.load("sounds/soundsAb/Ab.ogg")
+            mixer.music.play()
+        elif combo == "Eb":
+            mixer.music.load("sounds/soundsEb/Eb.ogg")
+            mixer.music.play()
+        elif combo == "Bb":
+            mixer.music.load("sounds/soundsBb/Bb.ogg")
+            mixer.music.play()
+        elif combo == "F":
+            mixer.music.load("sounds/soundsF/F.ogg")
+            mixer.music.play()
+        elif combo == "G":
+            mixer.music.load("sounds/soundsG/G.ogg")
+            mixer.music.play()
+        elif combo == "D":
+            mixer.music.load("sounds/soundsD/D.ogg")
+            mixer.music.play()
+        elif combo == "A":
+            mixer.music.load("sounds/soundsA/A.ogg")
+            mixer.music.play()
+        elif combo == "E":
+            mixer.music.load("sounds/soundsE/E.ogg")
+            mixer.music.play()
+        elif combo == "B":
+            mixer.music.load("sounds/soundsB/B.ogg")
+            mixer.music.play()
+        elif combo == "F#":
+            mixer.music.load("sounds/soundsF#/Gb.ogg")
+            mixer.music.play()
+        else:
+            mixer.music.load("sounds/soundsC/C.ogg")
+            mixer.music.play()
 
     def play_sound_two(self):
         mixer.init()
-        mixer.music.load("sounds/Dm.ogg")
-        mixer.music.play()
+        combo = self.ui.comboBox.currentText()
+        if combo == "Gb":
+            mixer.music.load("sounds/soundsGb/Abm.ogg")
+            mixer.music.play()
+        elif combo == "Db":
+            mixer.music.load("sounds/soundsDb/Ebm.ogg")
+            mixer.music.play()
+        elif combo == "Ab":
+            mixer.music.load("sounds/soundsAb/Bbm.ogg")
+            mixer.music.play()
+        elif combo == "Eb":
+            mixer.music.load("sounds/soundsEb/Fm.ogg")
+            mixer.music.play()
+        elif combo == "Bb":
+            mixer.music.load("sounds/soundsBb/Cm.ogg")
+            mixer.music.play()
+        elif combo == "F":
+            mixer.music.load("sounds/soundsF/Gm.ogg")
+            mixer.music.play()
+        elif combo == "G":
+            mixer.music.load("sounds/soundsG/Am.ogg")
+            mixer.music.play()
+        elif combo == "D":
+            mixer.music.load("sounds/soundsD/Em.ogg")
+            mixer.music.play()
+        elif combo == "A":
+            mixer.music.load("sounds/soundsA/Bm.ogg")
+            mixer.music.play()
+        elif combo == "E":
+            mixer.music.load("sounds/soundsE/F#m.ogg")
+            mixer.music.play()
+        elif combo == "B":
+            mixer.music.load("sounds/soundsB/C#m.ogg")
+            mixer.music.play()
+        elif combo == "F#":
+            mixer.music.load("sounds/soundsF#/Abm.ogg")
+            mixer.music.play()
+        else:
+            mixer.music.load("sounds/soundsC/Dm.ogg")
+            mixer.music.play()
 
     def play_sound_three(self):
         mixer.init()
-        mixer.music.load("sounds/Em.ogg")
-        mixer.music.play()
+        combo = self.ui.comboBox.currentText()
+        if combo == "Gb":
+            mixer.music.load("sounds/soundsGb/Bbm.ogg")
+            mixer.music.play()
+        elif combo == "Db":
+            mixer.music.load("sounds/soundsDb/Fm.ogg")
+            mixer.music.play()
+        elif combo == "Ab":
+            mixer.music.load("sounds/soundsAb/Cm.ogg")
+            mixer.music.play()
+        elif combo == "Eb":
+            mixer.music.load("sounds/soundsEb/Gm.ogg")
+            mixer.music.play()
+        elif combo == "Bb":
+            mixer.music.load("sounds/soundsBb/Dm.ogg")
+            mixer.music.play()
+        elif combo == "F":
+            mixer.music.load("sounds/soundsF/Am.ogg")
+            mixer.music.play()
+        elif combo == "G":
+            mixer.music.load("sounds/soundsG/Bm.ogg")
+            mixer.music.play()
+        elif combo == "D":
+            mixer.music.load("sounds/soundsD/F#m.ogg")
+            mixer.music.play()
+        elif combo == "A":
+            mixer.music.load("sounds/soundsA/C#m.ogg")
+            mixer.music.play()
+        elif combo == "E":
+            mixer.music.load("sounds/soundsE/G#m.ogg")
+            mixer.music.play()
+        elif combo == "B":
+            mixer.music.load("sounds/soundsB/D#m.ogg")
+            mixer.music.play()
+        elif combo == "F#":
+            mixer.music.load("sounds/soundsF#/Bbm.ogg")
+            mixer.music.play()
+        else:
+            mixer.music.load("sounds/soundsC/Em.ogg")
+            mixer.music.play()
 
     def play_sound_four(self):
         mixer.init()
-        mixer.music.load("sounds/Fmaj.ogg")
-        mixer.music.play()
+        combo = self.ui.comboBox.currentText()
+        if combo == "Gb":
+            mixer.music.load("sounds/soundsGb/B.ogg")
+            mixer.music.play()
+        elif combo == "Db":
+            mixer.music.load("sounds/soundsDb/Gb.ogg")
+            mixer.music.play()
+        elif combo == "Ab":
+            mixer.music.load("sounds/soundsAb/Db.ogg")
+            mixer.music.play()
+        elif combo == "Eb":
+            mixer.music.load("sounds/soundsEb/Ab.ogg")
+            mixer.music.play()
+        elif combo == "Bb":
+            mixer.music.load("sounds/soundsBb/Eb.ogg")
+            mixer.music.play()
+        elif combo == "F":
+            mixer.music.load("sounds/soundsF/Bb.ogg")
+            mixer.music.play()
+        elif combo == "G":
+            mixer.music.load("sounds/soundsG/C.ogg")
+            mixer.music.play()
+        elif combo == "D":
+            mixer.music.load("sounds/soundsD/G.ogg")
+            mixer.music.play()
+        elif combo == "A":
+            mixer.music.load("sounds/soundsA/D.ogg")
+            mixer.music.play()
+        elif combo == "E":
+            mixer.music.load("sounds/soundsE/A.ogg")
+            mixer.music.play()
+        elif combo == "B":
+            mixer.music.load("sounds/soundsB/E.ogg")
+            mixer.music.play()
+        elif combo == "F#":
+            mixer.music.load("sounds/soundsF#/B.ogg")
+            mixer.music.play()
+        else:
+            mixer.music.load("sounds/soundsC/F.ogg")
+            mixer.music.play()
 
     def play_sound_five(self):
         mixer.init()
-        mixer.music.load("sounds/Gmaj.ogg")
-        mixer.music.play()
+        combo = self.ui.comboBox.currentText()
+        if combo == "Gb":
+            mixer.music.load("sounds/soundsGb/Db.ogg")
+            mixer.music.play()
+        elif combo == "Db":
+            mixer.music.load("sounds/soundsDb/Ab.ogg")
+            mixer.music.play()
+        elif combo == "Ab":
+            mixer.music.load("sounds/soundsAb/Eb.ogg")
+            mixer.music.play()
+        elif combo == "Eb":
+            mixer.music.load("sounds/soundsEb/Bb.ogg")
+            mixer.music.play()
+        elif combo == "Bb":
+            mixer.music.load("sounds/soundsBb/F.ogg")
+            mixer.music.play()
+        elif combo == "F":
+            mixer.music.load("sounds/soundsF/C.ogg")
+            mixer.music.play()
+        elif combo == "G":
+            mixer.music.load("sounds/soundsG/D.ogg")
+            mixer.music.play()
+        elif combo == "D":
+            mixer.music.load("sounds/soundsD/A.ogg")
+            mixer.music.play()
+        elif combo == "A":
+            mixer.music.load("sounds/soundsA/E.ogg")
+            mixer.music.play()
+        elif combo == "E":
+            mixer.music.load("sounds/soundsE/B.ogg")
+            mixer.music.play()
+        elif combo == "B":
+            mixer.music.load("sounds/soundsB/F#.ogg")
+            mixer.music.play()
+        elif combo == "F#":
+            mixer.music.load("sounds/soundsF#/Db.ogg")
+            mixer.music.play()
+        else:
+            mixer.music.load("sounds/soundsC/G.ogg")
+            mixer.music.play()
 
     def play_sound_six(self):
         mixer.init()
-        mixer.music.load("sounds/Am.ogg")
-        mixer.music.play()
+        combo = self.ui.comboBox.currentText()
+        if combo == "Gb":
+            mixer.music.load("sounds/soundsGb/Ebm.ogg")
+            mixer.music.play()
+        elif combo == "Db":
+            mixer.music.load("sounds/soundsDb/Bbm.ogg")
+            mixer.music.play()
+        elif combo == "Ab":
+            mixer.music.load("sounds/soundsAb/Fm.ogg")
+            mixer.music.play()
+        elif combo == "Eb":
+            mixer.music.load("sounds/soundsEb/Cm.ogg")
+            mixer.music.play()
+        elif combo == "Bb":
+            mixer.music.load("sounds/soundsBb/Gm.ogg")
+            mixer.music.play()
+        elif combo == "F":
+            mixer.music.load("sounds/soundsF/Dm.ogg")
+            mixer.music.play()
+        elif combo == "G":
+            mixer.music.load("sounds/soundsG/Em.ogg")
+            mixer.music.play()
+        elif combo == "D":
+            mixer.music.load("sounds/soundsD/Bm.ogg")
+            mixer.music.play()
+        elif combo == "A":
+            mixer.music.load("sounds/soundsA/F#m.ogg")
+            mixer.music.play()
+        elif combo == "E":
+            mixer.music.load("sounds/soundsE/C#m.ogg")
+            mixer.music.play()
+        elif combo == "B":
+            mixer.music.load("sounds/soundsB/G#m.ogg")
+            mixer.music.play()
+        elif combo == "F#":
+            mixer.music.load("sounds/soundsF#/Ebm.ogg")
+            mixer.music.play()
+        else:
+            mixer.music.load("sounds/soundsC/Am.ogg")
+            mixer.music.play()
 
     def play_sound_seven(self):
         mixer.init()
-        mixer.music.load("sounds/Bdim.ogg")
-        mixer.music.play()
+        combo = self.ui.comboBox.currentText()
+        if combo == "Gb":
+            mixer.music.load("sounds/soundsGb/Fdim.ogg")
+            mixer.music.play()
+        elif combo == "Db":
+            mixer.music.load("sounds/soundsDb/Cdim.ogg")
+            mixer.music.play()
+        elif combo == "Ab":
+            mixer.music.load("sounds/soundsAb/Gdim.ogg")
+            mixer.music.play()
+        elif combo == "Eb":
+            mixer.music.load("sounds/soundsEb/Ddim.ogg")
+            mixer.music.play()
+        elif combo == "Bb":
+            mixer.music.load("sounds/soundsBb/Adim.ogg")
+            mixer.music.play()
+        elif combo == "F":
+            mixer.music.load("sounds/soundsF/Edim.ogg")
+            mixer.music.play()
+        elif combo == "G":
+            mixer.music.load("sounds/soundsG/F#dim.ogg")
+            mixer.music.play()
+        elif combo == "D":
+            mixer.music.load("sounds/soundsD/C#dim.ogg")
+            mixer.music.play()
+        elif combo == "A":
+            mixer.music.load("sounds/soundsA/G#dim.ogg")
+            mixer.music.play()
+        elif combo == "E":
+            mixer.music.load("sounds/soundsE/D#dim.ogg")
+            mixer.music.play()
+        elif combo == "B":
+            mixer.music.load("sounds/soundsB/A#dim.ogg")
+            mixer.music.play()
+        elif combo == "F#":
+            mixer.music.load("sounds/soundsF#/Fdim.ogg")
+            mixer.music.play()
+        else:
+            mixer.music.load("sounds/soundsC/Bdim.ogg")
+            mixer.music.play()
 
         #*** Database Code ***------------------------------
     def sql_delete_row(self):
@@ -108,7 +366,7 @@ class MusicApp():
         db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
         db.setDatabaseName('KEYS.db')
 
-        tableview = self.ui.tableView
+        tableview = self.table.tableView
         tableview.columnWidth(4)
 
         self.model = QtSql.QSqlTableModel()
@@ -174,17 +432,8 @@ class MusicApp():
 
 
     #********* play sound when keyboard key is pressed **********#
-    def key_press_event(event):
-        if event.key() == 65:
-            print("hi")
+    #Ctrl A - J will handle this feature
+
 
 if __name__=="__main__":
     MusicApp()
-
-
-# def run():
-#     widget = MusicApp()
-#     widget.show()
-#     sys.exit(app.exec_())
-#
-# run()
