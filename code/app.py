@@ -62,7 +62,7 @@ class SoundApp():
         app = QApplication(sys.argv)
         self.MainWindow = QMainWindow()
         self.ui = Ui_MainWindow()
-        table = Ui_Dialog()
+        self.table = Ui_Dialog()
         self.ui.setupUi(self.MainWindow)
         self.ui.comboBox.currentText()
         self.ui.one_chord.clicked.connect(self.play_sound_one)
@@ -77,18 +77,18 @@ class SoundApp():
         # table.btnClose.clicked.connect(self.print_hi)
 
         self.model = None
-        # self.ui.viewChords.clicked.connect(self.sql_tableview_model)
+        self.ui.viewChords.clicked.connect(self.sql_tableview_model)
         # self.ui.viewChords.clicked.connect(self.sql_add_row)
         # self.ui.viewChords.clicked.connect(self.sql_delete_row)
-        # self.ui.viewChords.clicked.connect(self.create_key_db)
+        self.ui.viewChords.clicked.connect(self.create_key_db)
         self.MainWindow.show()
         sys.exit(app.exec_())
 
 
     def open_table(self):
         self.window = QtWidgets.QDialog()
-        self.ui = Ui_Dialog()
-        self.ui.setupUi(self.window)
+        self.table = Ui_Dialog()
+        self.table.setupUi(self.window)
         self.window.show()
 
     def print_hi(self):
