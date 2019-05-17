@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QWidget, QShortcut
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QWidget, QShortcut, QFileDialog
 from PyQt5.uic import loadUi
 from PyQt5 import QtSql, QtGui, QtCore, QtWidgets
 from PyQt5.QtCore import Qt
@@ -12,8 +12,10 @@ from pygame import mixer
 from PyQt5.QtCore import Qt
 from table import Ui_Dialog
 from time import time, sleep
+from pickle import dump, load
 
-mixer.init()
+mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
+
 Gb = mixer.Sound("sounds/Gb.ogg")
 Db = mixer.Sound("sounds/Db.ogg")
 Ab = mixer.Sound("sounds/Ab.ogg")
@@ -184,6 +186,9 @@ class MainWindow(QMainWindow):
         self.seventh_flag = False
         self.current_song = []
         self.current_playable = []
+        self.abortFlag = False
+
+
         self.combo = self.ui.comboBox.currentText()
         self.ui.seventh_chord.setCheckable(True)
 
@@ -200,6 +205,9 @@ class MainWindow(QMainWindow):
         self.ui.seventh_chord.toggled.connect(self.on_pushButtonSetBase_toggled)
         self.ui.recButton.clicked.connect(self.record)
         self.ui.playButton.clicked.connect(self.playback)
+        self.ui.stopButton.clicked.connect(self.stop_music)
+        self.ui.actionOpen.triggered.connect(self.file_open)
+        self.ui.actionSave.triggered.connect(self.save_file)
         #initialize combo comboBox
         self.on_combobox_changed()
 
@@ -211,29 +219,18 @@ class MainWindow(QMainWindow):
 
         self.model = None
 
-    #set stylesheet
-
-
 
 
     def open_table(self):
+        """open database table"""
         self.sql_tableview_model()
         self.key_dlg.show()
         self.key_dlg.exec_()
 
-        # self.window = QtWidgets.QDialog()
-        # self.table = Ui_Dialog()
-        # self.table.setupUi(self.window)
-        # self.window.show()
 
 
-    #change order of loading chords
-
-
-
-
-    @QtCore.pyqtSlot(bool)  #<<== the missing link
-    def on_pushButtonSetBase_toggled(self,checked):
+    @QtCore.pyqtSlot(bool)
+    def on_pushButtonSetBase_toggled(self, checked):
         if checked:
             self.seventh_flag = True
             print(self.seventh_flag)
@@ -243,8 +240,9 @@ class MainWindow(QMainWindow):
             self.change_chord()
             print(self.seventh_flag)
 
-#TODO set default value to C
+
     def on_combobox_changed(self):
+        """get sounds of current selected key"""
         current_selection = []
         self.combo = self.ui.comboBox.currentIndex()
         if self.seventh_flag == True:
@@ -252,7 +250,9 @@ class MainWindow(QMainWindow):
         else:
             self.change_chord()
 
+#get sounds
     def change_chord(self):
+
         self.ui.label_1.setText(keys_name[self.combo][0])
         self.ui.label_2.setText(keys_name[self.combo][1])
         self.ui.label_3.setText(keys_name[self.combo][2])
@@ -270,9 +270,7 @@ class MainWindow(QMainWindow):
         self.ui.label_6.setText(keys_seventh_name[self.combo][5])
         self.ui.label_7.setText(keys_seventh_name[self.combo][6])
 
-#TODO change how sounds are played
-#UPdate current Key
-
+#Play sounds
     def play_sound_one(self):
         self.current_song.append((time(), 0))
         if self.seventh_flag == False:
@@ -343,66 +341,94 @@ class MainWindow(QMainWindow):
             exec(play_chord)
 
 
-#***** Record Code ******#
+#***** Recording Code ******#
 
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_R:
             self.record()
         elif e.key() == Qt.Key_P:
             self.playback()
-        else:
-            e.ignore()
+        elif e.key() == Qt.Key_X:
+            self.abortFlag = True
+        elif e.key() == Qt.Key_O:
+            self.file_open()
+        elif e.key() == Qt.Key_1:
+            self.save_file()
         e.accept()
+
+    def stop_music(self):
+        self.abortFlag = True
 
 
     def record(self):
         self.current_song = []
         self.current_playable = []
+        self.abortFlag = False
 
 
     def convert_time(self):
+        """convert time for recording"""
         prev = self.current_song[0][0]
         for event in self.current_song:
             self.current_playable.append((event[0] - prev, event[1]))
             prev = event[0]
         print("converting", self.current_playable)
-        sleep(5)
-        # self.playback()
+        sleep(1)
+
 
     def playback(self):
         if not self.current_playable:
             self.convert_time()
-        for item in self.current_playable:
-            sleep(item[0])
-            #GEt name of chord
-
-            # item[1].play()
-            play_chord = keys_chords[self.combo][item[1]] + ".play()"
-            exec(play_chord)
-            print(item[1], keys_name[self.combo][item[1]])
-        print(self.current_song)
-        pp(self.current_playable)
-
-    # def keyPressEvent(self, event):
-    #     if type(event) == QtGui.QKeyEvent:
-    #         if event.key() == QtCore.Qt.Key_A:
+        self.abortFlag = False
+        while not self.abortFlag:
+            for item in self.current_playable:
+                if self.abortFlag:
+                    break
+                sleep(item[0])
 
 
 
+                if self.seventh_flag:
+                    play_chord = keys_chords_seventh[self.combo][item[1]] + ".play()"
+                else:
+                    play_chord = keys_chords[self.combo][item[1]] + ".play()"
+                exec(play_chord)
+                app.processEvents()
+                print(item[1], keys_name[self.combo][item[1]])
+            sleep(2)
 
 
-        #*** Database Code ***------------------------------
-    # def sql_delete_row(self):
-    #     if self.model:
-    #         self.model.removeRow(self.tableview.currentIndex().row())
-    #     else:
-    #         self.sql_tableview_model()
-    #
-    # def sql_add_row(self):
-    #     if self.model:
-    #         self.model.insertRows(self.model.rowCount(), 1)
-    #     else:
-    #         self.sql_tableview_model()
+    def save_file(self):
+        """get name to save as"""
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+
+        file_name, _ = QFileDialog.getSaveFileName(self, directory="sample_music", options=options)
+        if file_name:
+            self.save(file_name)
+
+    def save(self, file_name):
+        """write to disk"""
+        file_out = open(file_name, "wb")
+        dump(self.current_playable, file_out)
+
+
+    def file_open(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+
+        file_name, _ = QFileDialog.getOpenFileName(self, directory="sample_music", options=options)
+        if file_name:
+            print(file_name)
+            file_in = open(file_name, "rb")
+            self.current_playable = load(file_in)
+            print(self.current_playable)
+
+
+
+
+
+        #*** Database Code ***
 
     def sql_tableview_model(self):
         db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
@@ -428,53 +454,6 @@ class MainWindow(QMainWindow):
         tableview.hideColumn(0)
 
 
-        #******* Initialize db winddow *********#
-    # def print_data(self):
-    #     sqlite_file = 'KEYS.db'
-    #     conn = sqlite3.connect(sqlite_file)
-    #     cursor = conn.cursor()
-    #
-    #     cursor.execute("SELECT * FROM KEYS ORDER BY ID")
-    #     all_rows = cursor.fetchall()
-    #     pprint(all_rows)
-    #
-    #     conn.commit()
-    #     conn.close()
-
-
-        #******** Print db ********#
-    # def create_key_db(self):
-    #     db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
-    #     db.setDatabaseName('KEYS.db')
-    #     db.open()
-    #
-    #     query = QtSql.QSqlQuery()
-    #
-    #     query.exec_("create table KEYS(ID int primary key, "
-    #                 "I varchar(2),"
-    #                 "II varchar(2),"
-    #                 "III varchar(2),"
-    #                 "IV varchar(2),"
-    #                 "V varchar(2),"
-    #                 "VI varchar(2),"
-    #                 "VII varchar(2))")
-    #     query.exec_("insert into KEYS values(1, 'Gb', 'Ab', 'Bb', 'Cb', 'Db', 'Eb','F')")
-    #     query.exec_("insert into KEYS values(2, 'Db', 'Eb','F', 'Gb', 'Ab', 'Bb', 'C')")
-    #     query.exec_("insert into KEYS values(3, 'Ab', 'Bb', 'C', 'Db', 'Eb','F', 'G')")
-    #     query.exec_("insert into KEYS values(4, 'Eb','F', 'G', 'Ab', 'Bb', 'C', 'D')")
-    #     query.exec_("insert into KEYS values(5, 'Bb', 'C', 'D', 'Eb','F', 'G', 'A')")
-    #     query.exec_("insert into KEYS values(6, 'F', 'G', 'A', 'Bb', 'C', 'D', 'E')")
-    #     query.exec_("insert into KEYS values(7, 'C', 'D', 'E', 'F', 'G', 'A', 'B')")
-    #     query.exec_("insert into KEYS values(8, 'G', 'A', 'B', 'C', 'D', 'E', 'F#')")
-    #     query.exec_("insert into KEYS values(9, 'D', 'E', 'F#', 'G', 'A', 'B', 'C#')")
-    #     query.exec_("insert into KEYS values(10, 'A', 'B', 'C#', 'D', 'E', 'F#', 'G#')")
-    #     query.exec_("insert into KEYS values(11, 'E', 'F#', 'G#', 'A', 'B', 'C#', 'D#')")
-    #     query.exec_("insert into KEYS values(12, 'B', 'C#', 'D#', 'E', 'F#', 'G#', 'A#')")
-    #     query.exec_("insert into KEYS values(13, 'F#', 'G#', 'A#', 'B', 'C#', 'D#', 'E#')")
-
-
-    #********* play sound when keyboard key is pressed **********#
-    #Ctrl A - J will handle this feature
 
 
 if __name__=="__main__":

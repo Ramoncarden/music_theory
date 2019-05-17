@@ -144,18 +144,18 @@ class Ui_MainWindow(object):
         self.label_7.setAlignment(QtCore.Qt.AlignCenter)
         self.label_7.setObjectName("label_7")
         self.recButton = QtWidgets.QPushButton(self.centralwidget)
-        self.recButton.setGeometry(QtCore.QRect(300, 130, 60, 60))
+        self.recButton.setGeometry(QtCore.QRect(270, 130, 60, 60))
         font = QtGui.QFont()
         font.setPointSize(15)
         font.setBold(True)
         font.setWeight(75)
         self.recButton.setFont(font)
         self.recButton.setStyleSheet("#recButton {\n"
-"color: #333;\n"
+"color: rgb(255, 77, 63);\n"
 "border: 2px solid #555;\n"
 "border-radius: 30px;\n"
 "border-style: outset;\n"
-"background-color: rgb(255, 77, 63);\n"
+"background-color: rgb(247, 244, 250);\n"
 "padding: 5px;\n"
 "}\n"
 "\n"
@@ -167,15 +167,18 @@ class Ui_MainWindow(object):
 "font: bold 18px;\n"
 "color: white;\n"
 "min-width: 8em;\n"
+"background-color: rgb(255, 77, 63);\n"
 "}\n"
 "\n"
 "\n"
 "\n"
 "\n"
 "    ")
+        self.recButton.setCheckable(False)
+        self.recButton.setChecked(False)
         self.recButton.setObjectName("recButton")
         self.playButton = QtWidgets.QToolButton(self.centralwidget)
-        self.playButton.setGeometry(QtCore.QRect(430, 140, 101, 41))
+        self.playButton.setGeometry(QtCore.QRect(370, 140, 101, 41))
         font = QtGui.QFont()
         font.setFamily(".SF NS Text")
         font.setPointSize(14)
@@ -216,6 +219,15 @@ class Ui_MainWindow(object):
         self.label.setTextFormat(QtCore.Qt.AutoText)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
+        self.stopButton = QtWidgets.QPushButton(self.centralwidget)
+        self.stopButton.setGeometry(QtCore.QRect(520, 135, 61, 51))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.stopButton.setFont(font)
+        self.stopButton.setStyleSheet("background-color: rgb(255, 139, 69);")
+        self.stopButton.setObjectName("stopButton")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 846, 22))
@@ -238,7 +250,6 @@ class Ui_MainWindow(object):
         self.menuMusic_App.addAction(self.actionSave)
         self.menuMusic_App.addAction(self.actionExit)
         self.menuMusic_App.addSeparator()
-        self.menuMusic_App.addAction(self.actionNight_Mode)
         self.menubar.addAction(self.menuMusic_App.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -278,6 +289,7 @@ class Ui_MainWindow(object):
         self.one_chord.setShortcut(_translate("MainWindow", "A"))
         self.recButton.setText(_translate("MainWindow", "Rec"))
         self.label.setText(_translate("MainWindow", "Melody Maker"))
+        self.stopButton.setText(_translate("MainWindow", "Stop"))
         self.menuMusic_App.setTitle(_translate("MainWindow", "File"))
         self.actionOpen.setText(_translate("MainWindow", "Open"))
         self.actionSave.setText(_translate("MainWindow", "Save"))
@@ -285,13 +297,3 @@ class Ui_MainWindow(object):
         self.actionNight_Mode.setText(_translate("MainWindow", "Night Mode"))
 
 
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())

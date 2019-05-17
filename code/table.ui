@@ -10,8 +10,13 @@
     <height>548</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>15</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Chords</string>
   </property>
   <widget class="QPushButton" name="btnClose">
    <property name="geometry">
